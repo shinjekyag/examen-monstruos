@@ -14,6 +14,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Object = UnityEngine.Object;
+using Tarea08ModelInfo = LolSuperman.Tarea08.ModelInfo;
 
 public static class Tarea08Automation
 {
@@ -74,10 +75,10 @@ public static class Tarea08Automation
                 throw new InvalidOperationException("Falta el prefab para " + reference.name);
             var icon = CreateIcon(reference);
             string path = AssetRoot + "/ModelInfo/" + reference.name + ".asset";
-            var information = AssetDatabase.LoadAssetAtPath<ModelInfo>(path);
+            var information = AssetDatabase.LoadAssetAtPath<Tarea08ModelInfo>(path);
             if (information == null)
             {
-                information = ScriptableObject.CreateInstance<ModelInfo>();
+                information = ScriptableObject.CreateInstance<Tarea08ModelInfo>();
                 AssetDatabase.CreateAsset(information, path);
                 FillInformation(information, reference.name, icon);
             }
@@ -130,7 +131,7 @@ public static class Tarea08Automation
         return AssetDatabase.LoadAssetAtPath<Sprite>(destination);
     }
 
-    private static void FillInformation(ModelInfo info, string imageName, Sprite icon)
+    private static void FillInformation(Tarea08ModelInfo info, string imageName, Sprite icon)
     {
         switch (imageName)
         {

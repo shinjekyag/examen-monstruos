@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ddb5cba7d9aceb2459a6958bfa04053e, type: 3}
-  m_Name: Monstruo_2
+  m_Name: M3
   m_EditorClassIdentifier: Assembly-CSharp::ElementData
   elementName: 
   description: 
