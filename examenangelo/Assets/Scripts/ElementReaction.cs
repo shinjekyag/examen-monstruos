@@ -12,9 +12,13 @@ public class ElementReaction : ScriptableObject
     public ElementData result;
     public AudioClip reactionSound;
 
+    [Header("Interaction")]
+    public float interactionDistance = 0.15f;
+    public AudioClip reactionsound;
+
     public bool CanReact(ElementData a, ElementData b)
     {
-        return (a == elementA && b == elementB) || (a == elementB && == elementA);
+        return (a == elementA && b == elementB) || (a == elementB && b == elementA);
     }
     //arfneiurneiurneirun
 
