@@ -49,3 +49,33 @@ MonoBehaviour:
     m_SpecifySize: 1
     m_Name: Miku
     m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5568314818553425201
+      m_GuidHigh: 15645135668497380541
+    m_SerializedTextureGuid:
+      m_GuidLow: 0
+      m_GuidHigh: 0
+    m_Size: {x: 0, y: 0}
+    m_SpecifySize: 0
+    m_Name: 
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4851018053960341278
+      m_GuidHigh: 3510373434667674241
+    m_SerializedTextureGuid:
+      m_GuidLow: 0
+      m_GuidHigh: 0
+    m_Size: {x: 0, y: 0}
+    m_SpecifySize: 0
+    m_Name: 
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5640663915954642629
+      m_GuidHigh: 3450070083695250600
+    m_SerializedTextureGuid:
+      m_GuidLow: 0
+      m_GuidHigh: 0
+    m_Size: {x: 0, y: 0}
+    m_SpecifySize: 0
+    m_Name: 
+    m_Texture: {fileID: 0}
