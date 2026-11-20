@@ -1,136 +1,99 @@
+using System;
 using System.Collections.Generic;
+using LolSuperman.Tarea08;
 using UnityEngine;
 
-public class ARReactionManager : MonoBehaviour
+[DisallowMultipleComponent]
+public sealed class ARReactionManager : MonoBehaviour
 {
-    [Header("Spawner")]
-    [SerializeField] private ARImageSpawner imageSpawner;
+    [Serializable]
+    private sealed class GritoDeBatalla
+    {
+        public ElementData criatura;
+        public AudioSource fuente;
+    }
 
-    [Header("Avaible Reactions")]
-    [SerializeField] private List<ElementReaction> reactions = new List<ElementReaction>();
+    [SerializeField] private ImageModelTrackingManager imageTracking;
+    [SerializeField] private List<ElementReaction> reacciones = new List<ElementReaction>();
 
-    [Header("Spawner")]
-    [SerializeField] private AudioSource audioSource;
+    [Header("Arrastra los AudioSource de los gritos de batalla")]
+    [SerializeField] private List<GritoDeBatalla> gritosDeBatalla = new List<GritoDeBatalla>();
 
-    GameObject resultInstance;
-
-    //Elementos participando en la reaccion activa
-    TrackedElement reactingA;
-    TrackedElement reactingB;
-
-    bool hasInteracted = false;
+    private readonly List<TrackedModel> visibles = new List<TrackedModel>();
+    private readonly List<(TrackedModel a, TrackedModel b, ElementReaction regla)> activos =
+        new List<(TrackedModel, TrackedModel, ElementReaction)>();
 
     private void Update()
     {
-        if (hasInteracted)
+        for (int i = activos.Count - 1; i >= 0; i--)
         {
-            if(!reactingA.IsTracking() || !reactingB.IsTracking())
-            {
-                CancelReaction();
-            }
+            var par = activos[i];
+            if (EnRango(par.a, par.b, par.regla)) continue;
+            Terminar(par.a, par.b);
+            activos.RemoveAt(i);
+        }
 
+        if (imageTracking == null || !imageTracking.isActiveAndEnabled) return;
+        visibles.Clear();
+        foreach (var modelo in imageTracking.ActiveModels)
+            if (modelo.Elemento != null && modelo.Presentacion != null)
+                visibles.Add(modelo);
+
+        for (int i = 0; i < visibles.Count; i++)
+            for (int j = i + 1; j < visibles.Count; j++)
+                IntentarInteraccion(visibles[i], visibles[j]);
+    }
+
+    private void IntentarInteraccion(TrackedModel a, TrackedModel b)
+    {
+        if (!a.Presentacion.PuedeInteractuar || !b.Presentacion.PuedeInteractuar) return;
+        foreach (var regla in reacciones)
+        {
+            if (regla == null || !regla.CanReact(a.Elemento, b.Elemento) || !EnRango(a, b, regla)) continue;
+
+            a.Presentacion.IniciarInteraccion(regla.AccionPara(a.Elemento), b.transform);
+            b.Presentacion.IniciarInteraccion(regla.AccionPara(b.Elemento), a.transform);
+            activos.Add((a, b, regla));
+
+            if (regla.EsBatalla)
+            {
+                ReproducirGrito(a.Elemento);
+                ReproducirGrito(b.Elemento);
+            }
             return;
         }
-
-        //Obtener los elementos trackeados actualmente
-        List<TrackedElement> visibleElements = new List<TrackedElement>();
-
-        foreach (TrackedElement element in imageSpawner.SpawnedElements)
-        {
-            if(element.IsTracking() && !element.isReacting)
-            {
-                visibleElements.Add(element);
-            }
-        }
-
-        for( int i = 0; i < visibleElements.Count; i++)
-        {
-            for(int j = 1; j < visibleElements.Count; j++)
-            {
-                if (CheckReaction(visibleElements[i], visibleElements[j]))
-                    return;
-                {
-
-                }
-            }
-        }
     }
 
-    bool CheckReaction(TrackedElement a, TrackedElement b)
+    private static bool EnRango(TrackedModel a, TrackedModel b, ElementReaction regla)
     {
-        foreach(ElementReaction reaction in reactions)
-        {
-            if (reaction == null)
-                continue;
-            if (!reaction.CanReact(a.data, b.data))
-                continue;
-            float distance = Vector3.Distance(a.GetPosition(), b.GetPosition());
-            if (distance > reaction.interactionDistance)
-                continue;
-            if (reaction.result == null || reaction.result.prefab == null)
-                continue;
+        if (a == null || b == null || !a.isActiveAndEnabled || !b.isActiveAndEnabled ||
+            !a.Presentacion.isActiveAndEnabled || !b.Presentacion.isActiveAndEnabled) return false;
 
-            ExecuteReaction(a, b, reaction);
-            return true;
-        }
-
-        return false;
+        Vector3 diferencia = a.PosicionDeTarjeta - b.PosicionDeTarjeta;
+        return diferencia.sqrMagnitude <= regla.interactionDistance * regla.interactionDistance;
     }
 
-    void ExecuteReaction(TrackedElement a, TrackedElement b, ElementReaction reaction)
+    private void ReproducirGrito(ElementData elemento)
     {
-        hasInteracted = true;
-
-        reactingA = a;
-        reactingB = b;
-
-        imageSpawner.SetElementReacting(a, true);
-        imageSpawner.SetElementReacting(b, true);
-
-        Vector3 midPoint = (a.GetPosition() + b.GetPosition()) / 2f;
-        resultInstance = Instantiate(reaction.result.prefab, midPoint, Quaternion.identity);
-        ModelInfo info = resultInstance.GetComponent<ModelInfo>();
-        if(info != null)
+        foreach (var grito in gritosDeBatalla)
         {
-            info.ElementData = reaction.result;
+            if (grito.criatura != elemento || grito.fuente == null || grito.fuente.clip == null) continue;
+            grito.fuente.Play();
+            return;
         }
-
-        if(audioSource != null && reaction.reactionSound != null)
-        {
-            audioSource.PlayOneShot(reaction.reactionSound);
-        }
-        Debug.Log($"Reaction: {a.data.elementName} + {b.data.elementName} = {reaction.result.elementName}");
     }
 
-    void CancelReaction()
+    private static void Terminar(TrackedModel a, TrackedModel b)
     {
-        //Destruir resultado
-        if(resultInstance != null)
-        {
-            Destroy(resultInstance);
-            resultInstance = null;
-        }
-
-        //Restaurar elementos originales
-        if(reactingA != null)
-        {
-            imageSpawner.SetElementReacting(reactingA, false);
-        }
-        if (reactingB != null)
-        {
-            imageSpawner.SetElementReacting(reactingB, false);
-        }
-
-        reactingA = reactingB = null;
-
-        Debug.Log("Reaction cancelled");
+        if (a != null && a.Presentacion != null) a.Presentacion.TerminarInteraccion();
+        if (b != null && b.Presentacion != null) b.Presentacion.TerminarInteraccion();
     }
+
+    private void OnDisable() => ResetReaction();
 
     public void ResetReaction()
     {
-        if (hasInteracted)
-        {
-            CancelReaction();
-        }
+        foreach (var par in activos) Terminar(par.a, par.b);
+        activos.Clear();
     }
 }

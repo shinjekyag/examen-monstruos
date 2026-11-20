@@ -1,25 +1,32 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ElementReaction", menuName = "Scriptable Objects/ElementReaction")]
+public enum TipoInteraccion
+{
+    Amistosa,
+    DueloFisico,
+    BatallaMagica,
+    Gymbros
+}
+
+[CreateAssetMenu(fileName = "Interaccion", menuName = "Bestiario/Interacción entre criaturas")]
 public class ElementReaction : ScriptableObject
 {
-    [Header("Required Elements")]
+    [Header("Criaturas y animaciones")]
     public ElementData elementA;
+    public AccionInteraccion accionA;
     public ElementData elementB;
+    public AccionInteraccion accionB;
 
-    [Header("Result")]
-    public ElementData result;
-    public AudioClip reactionSound;
+    [Header("Interacción AR")]
+    public TipoInteraccion tipo;
+    [Min(0.01f)] public float interactionDistance = 0.3f;
 
-    [Header("Interaction")]
-    public float interactionDistance = 0.15f;
-    public AudioClip reactionsound;
+    public bool EsBatalla => tipo == TipoInteraccion.DueloFisico || tipo == TipoInteraccion.BatallaMagica;
 
     public bool CanReact(ElementData a, ElementData b)
     {
-        return (a == elementA && b == elementB) || (a == elementB && b == elementA);
+        return a != null && b != null && ((a == elementA && b == elementB) || (a == elementB && b == elementA));
     }
-    //arfneiurneiurneirun
 
+    public AccionInteraccion AccionPara(ElementData criatura) => criatura == elementA ? accionA : accionB;
 }

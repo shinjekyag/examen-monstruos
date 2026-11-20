@@ -15,6 +15,7 @@ namespace LolSuperman.Tarea08
             public string referenceImageName;
             public GameObject prefab;
             public ModelInfo information;
+            public ElementData elemento;
         }
 
         [SerializeField] private ARTrackedImageManager imageManager;
@@ -98,16 +99,17 @@ namespace LolSuperman.Tarea08
             {
                 if (!visible || anchor == null) return;
                 var binding = models.Find(item => item.referenceImageName == imageName);
-                if (binding == null || binding.prefab == null || binding.information == null) return;
+                if (binding == null) return;
+                var prefab = binding.elemento != null ? binding.elemento.prefab : binding.prefab;
+                if (prefab == null || (binding.elemento == null && binding.information == null)) return;
 
-                var root = Instantiate(binding.prefab, anchor, false);
-                root.name = binding.information.ModelName;
-                root.transform.localPosition = Vector3.zero;
-                root.transform.localRotation = binding.prefab.transform.localRotation;
-                root.transform.localScale = binding.prefab.transform.localScale;
+                var root = Instantiate(prefab, anchor, false);
+                root.name = binding.elemento != null ? binding.elemento.elementName : binding.information.ModelName;
+                if (binding.elemento == null) root.transform.localPosition = Vector3.zero;
                 instance = root.GetComponent<TrackedModel>();
                 if (instance == null) instance = root.AddComponent<TrackedModel>();
                 instance.SetInformation(binding.information);
+                if (binding.elemento != null) instance.VincularCriatura(binding.elemento);
                 AddSelectionCollider(root);
                 instances[id] = instance;
                 root.SetActive(true);

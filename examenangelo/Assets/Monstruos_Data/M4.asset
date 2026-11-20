@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddb5cba7d9aceb2459a6958bfa04053e, type: 3}
   m_Name: M4
   m_EditorClassIdentifier: Assembly-CSharp::ElementData
-  elementName: 
-  description: 
-  level: 0
-  icon: {fileID: 0}
-  prefab: {fileID: 0}
+  elementName: Censura
+  description: "Un guardi\xE1n no muerto. Comparte el baile con Emanuel y el entrenamiento
+    con Picos."
+  level: 4
+  type: "No muerto \xB7 Guardi\xE1n"
+  icon: {fileID: 21300000, guid: 884b2ef8ab3c61c409deb1e8dc2c3976, type: 3}
+  prefab: {fileID: 5520956202291713851, guid: 1b9bcd97e9b743b4c89a5538e4d9d00f, type: 3}

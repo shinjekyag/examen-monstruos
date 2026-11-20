@@ -86,12 +86,18 @@ namespace LolSuperman.Tarea08
             if (imageTracking == null) return false;
             Physics.SyncTransforms();
             if (!Physics.Raycast(ray, out var hit, maximumDistance, modelLayers, QueryTriggerInteraction.Collide) ||
-                !imageTracking.TryGetModel(hit.transform, out var model) || model.Information == null)
+                !imageTracking.TryGetModel(hit.transform, out var model) ||
+                (model.Information == null && model.Elemento == null))
                 return false;
 
             selectedModel = model;
             selectedModel.BecameUnavailable += OnSelectedModelUnavailable;
-            if (informationPanel != null) informationPanel.Show(model.Information);
+            if (informationPanel != null)
+            {
+                if (model.Elemento != null) informationPanel.Show(model.Elemento);
+                else informationPanel.Show(model.Information);
+            }
+            if (model.Presentacion != null) model.Presentacion.MostrarAtencion();
             return true;
         }
 

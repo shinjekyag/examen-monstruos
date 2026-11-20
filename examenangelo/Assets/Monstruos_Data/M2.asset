@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddb5cba7d9aceb2459a6958bfa04053e, type: 3}
   m_Name: M2
   m_EditorClassIdentifier: Assembly-CSharp::ElementData
-  elementName: 
-  description: 
-  level: 0
-  icon: {fileID: 0}
-  prefab: {fileID: 0}
+  elementName: Picos
+  description: Un mutante que convierte su fuerza en saltos y golpes. Entrena con
+    Censura.
+  level: 4
+  type: "Mutante \xB7 Cuerpo a cuerpo"
+  icon: {fileID: 21300000, guid: ce6a564584e0d8b479173c1a91baa6eb, type: 3}
+  prefab: {fileID: 8732699449096758755, guid: 872ae0ac9eebde64c9f8a95d583090c6, type: 3}

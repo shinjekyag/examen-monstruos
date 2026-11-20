@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddb5cba7d9aceb2459a6958bfa04053e, type: 3}
   m_Name: M3
   m_EditorClassIdentifier: Assembly-CSharp::ElementData
-  elementName: 
-  description: 
-  level: 0
-  icon: {fileID: 0}
-  prefab: {fileID: 0}
+  elementName: Emanuel
+  description: "Un no muerto que concentra energ\xEDa en su mano para lanzar hechizos."
+  level: 5
+  type: "No muerto \xB7 M\xE1gico"
+  icon: {fileID: 21300000, guid: 835842a4d86cc5c43bb08876fed3e4ac, type: 3}
+  prefab: {fileID: 5819936563390538679, guid: 912a816f50ed79e46b0c19c209ec0055, type: 3}

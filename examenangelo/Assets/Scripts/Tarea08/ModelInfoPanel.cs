@@ -12,6 +12,7 @@ namespace LolSuperman.Tarea08
         [SerializeField] private Text levelText;
         [SerializeField] private Image modelIcon;
         [SerializeField] private GameObject emptyIcon;
+        [SerializeField] private GameObject fichaDesplegable;
         [Header("Estado del seguimiento")]
         [SerializeField] private Text trackingText;
         [SerializeField] private Text instructionText;
@@ -53,16 +54,29 @@ namespace LolSuperman.Tarea08
         {
             if (information == null) { ResetToOriginal(); return; }
             CurrentInformation = information;
-            SetText(modelNameText, information.ModelName);
-            SetText(descriptionText, information.Description);
-            SetText(categoryText, information.Category);
-            SetText(levelText, information.Level.ToString());
+            ShowValues(information.ModelName, information.Description, information.Category, information.Level, information.Icon);
+        }
+
+        public void Show(ElementData creature)
+        {
+            if (creature == null) { ResetToOriginal(); return; }
+            CurrentInformation = null;
+            ShowValues(creature.elementName, creature.description, creature.type, creature.level, creature.icon);
+        }
+
+        private void ShowValues(string name, string description, string type, int level, Sprite icon)
+        {
+            SetText(modelNameText, name);
+            SetText(descriptionText, description);
+            SetText(categoryText, type);
+            SetText(levelText, level.ToString());
             if (modelIcon != null)
             {
-                modelIcon.sprite = information.Icon;
-                modelIcon.gameObject.SetActive(information.Icon != null);
+                modelIcon.sprite = icon;
+                modelIcon.gameObject.SetActive(icon != null);
             }
-            if (emptyIcon != null) emptyIcon.SetActive(information.Icon == null);
+            if (emptyIcon != null) emptyIcon.SetActive(icon == null);
+            if (fichaDesplegable != null) fichaDesplegable.SetActive(true);
         }
 
         public void ResetToOriginal()
@@ -78,14 +92,17 @@ namespace LolSuperman.Tarea08
                 modelIcon.gameObject.SetActive(false);
             }
             if (emptyIcon != null) emptyIcon.SetActive(true);
+            if (fichaDesplegable != null) fichaDesplegable.SetActive(false);
         }
 
         public void SetTrackedCount(int count)
         {
             SetText(trackingText, count == 0 ? "BUSCANDO IMÁGENES" :
                 count == 1 ? "1 MODELO DETECTADO" : count + " MODELOS DETECTADOS");
-            SetText(instructionText, count == 0 ? "Apunta a Greninja, Paletas o Miku" :
-                "Toca un modelo para ver su información");
+            if (fichaDesplegable != null)
+                SetText(instructionText, count == 0 ? "Apunta a una de las cuatro tarjetas" : "Toca una criatura para consultar su ficha");
+            else
+                SetText(instructionText, count == 0 ? "Apunta a Greninja, Paletas o Miku" : "Toca un modelo para ver su información");
         }
 
         private static void SetText(Text target, string value)

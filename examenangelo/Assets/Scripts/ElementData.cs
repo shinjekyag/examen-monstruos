@@ -10,6 +10,7 @@ public class ElementData : ScriptableObject
     public string description;
 
     public int level;
+    public string type;
     public Sprite icon;
 
     [Header("Model")]

@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddb5cba7d9aceb2459a6958bfa04053e, type: 3}
   m_Name: M1
   m_EditorClassIdentifier: Assembly-CSharp::ElementData
-  elementName: 
-  description: 
-  level: 0
-  icon: {fileID: 0}
-  prefab: {fileID: 0}
+  elementName: Insulina
+  description: "Una bestia de embestidas pesadas. Prefiere resolver los desaf\xEDos
+    cuerpo a cuerpo."
+  level: 3
+  type: "Bestia \xB7 Cuerpo a cuerpo"
+  icon: {fileID: 21300000, guid: 12e08dafe3e959943adb14e19994403f, type: 3}
+  prefab: {fileID: 5332528984642361038, guid: 5f722bc24b75dea438e36802158d4d39, type: 3}
